@@ -15,14 +15,14 @@ public class Faction {
 	
 	public final String name;
 	public final Color colour;
-	private boolean playerControlled;
+	private final boolean playerControlled;
 	
 	public Training training = Training.CANNONS;
-	public Movement movement = Movement.RETREAT;
+	public Movement movement = Movement.EXPLORE;
 	public Strategy strategy = Strategy.AVOID;
 	
-	private Set<Tile> ownedTiles = new HashSet<>();
-	private Set<Tile> frontlineTiles = new HashSet<>();
+	private final Set<Tile> ownedTiles = new HashSet<>();
+	private final Set<Tile> frontlineTiles = new HashSet<>();
 	
 	private float unitsToAdd = 0;
 	
@@ -30,6 +30,8 @@ public class Faction {
 		this.name = name;
 		this.colour = colour;
 		this.playerControlled = playerControlled;
+		
+		System.out.println("Faction " + name + " created");
 	}
 	
 	public void addTile(Tile tile) {
@@ -89,7 +91,7 @@ public class Faction {
 	/**
 	 * @return The total number of units across all tiles owned by this faction
 	 */
-	public int getUnits() {
+	private int getUnits() {
 		int units = 0;
 		for (Tile tile : ownedTiles) {
 			units += tile.getUnits();
@@ -108,7 +110,7 @@ public class Faction {
 	/**
 	 * @return True if all tiles of this faction are almost full
 	 */
-	public boolean isNearUnitLimit() {
+	private boolean isNearUnitLimit() {
 		return getUnits() >= ownedTiles.size() * (MAX_UNITS - 1);
 	}
 	
@@ -352,7 +354,7 @@ public class Faction {
 	 *
 	 * @param tile The tile to check
 	 */
-	public void updateFrontline(Tile tile) {
+	private void updateFrontline(Tile tile) {
 		updateFrontlineTile(tile);
 		tile.getSurrounding().forEach(this::updateFrontlineTile);
 	}

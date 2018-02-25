@@ -14,7 +14,7 @@ import java.util.Map;
 public class ColourUtils {
 	
 	// Colour texture cache
-	private static Map<Color, TextureRegion> colourTextures = new HashMap<>();
+	private static final Map<Color, TextureRegion> colourTextures = new HashMap<>();
 	
 	/**
 	 * Creates a colour from the RGB values
@@ -24,9 +24,10 @@ public class ColourUtils {
 	 * @param a The alpha value between 0-1, defaults to 1
 	 * @return The colour
 	 */
-	public static Color getColour(int r, int g, int b, float a) {
+	private static Color getColour(int r, int g, int b, float a) {
 		return new Color(r / 255f, g / 255f, b / 255f, a);
 	}
+	
 	public static Color getColour(int r, int g, int b) {
 		return getColour(r, g, b, 1);
 	}

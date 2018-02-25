@@ -13,7 +13,6 @@ import static com.badlogic.gdx.Input.Keys.ANY_KEY;
 
 public final class DefeatScreen implements Screen {
 	
-	private Game game;
 	private BitmapFont font;
 	private BitmapFont smallFont;
 	private Batch batch;
@@ -22,7 +21,7 @@ public final class DefeatScreen implements Screen {
 	public void show() {
 		System.out.println("Showing defeatScreen");
 		
-		game = Game.get();
+		Game game = Game.get();
 		batch = game.batch;
 		
 		font = game.assets.get("font-large.fnt");

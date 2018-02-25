@@ -116,7 +116,7 @@ public class Tile {
 	/**
 	 * Removes the current owner from this tile
 	 */
-	public void abandon() {
+	private void abandon() {
 		swords = 0;
 		bows = 0;
 		cannons = 0;

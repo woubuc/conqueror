@@ -24,7 +24,7 @@ public final class GameScreen implements Screen {
 	private BitmapFont smallFont;
 	private BitmapFont largeFont;
 	
-	private Clock clock = new Clock();
+	private final Clock clock = new Clock();
 	
 	@Override
 	public void show() {
@@ -43,6 +43,11 @@ public final class GameScreen implements Screen {
 		
 		if (game.player.getScore() == MAP_SIZE * MAP_SIZE) {
 			game.setScreen(game.victoryScreen);
+			return;
+		}
+		
+		if (game.player.isEliminated()) {
+			game.setScreen(game.defeatScreen);
 			return;
 		}
 		
@@ -123,6 +128,75 @@ public final class GameScreen implements Screen {
 			smallFont.draw(batch, faction.name, mapSizePx + 20, mapSizePx - 180 - (40 * i) + 26);
 			smallFont.draw(batch, Integer.toString(Math.round(faction.getAttack())), mapSizePx + 25, mapSizePx - 180 - (40 * i) + 11);
 			smallFont.draw(batch, Integer.toString(Math.round(faction.getDefense())), mapSizePx + 115, mapSizePx - 180 - (40 * i) + 11);
+		}
+		
+		smallFont.draw(batch, "Movement", mapSizePx + 64, mapSizePx - 375);
+		switch (game.player.movement) {
+			case EXPLORE:
+				batch.draw(game.assets.get("movement_explore.png", Texture.class), mapSizePx + 20, mapSizePx - 400);
+				largeFont.draw(batch, "Explore", mapSizePx + 64, mapSizePx - 385);
+				break;
+				
+			case FORTIFY:
+				batch.draw(game.assets.get("movement_fortify.png", Texture.class), mapSizePx + 20, mapSizePx - 400);
+				largeFont.draw(batch, "Fortify", mapSizePx + 64, mapSizePx - 385);
+				break;
+				
+			case RETREAT:
+				batch.draw(game.assets.get("movement_retreat.png", Texture.class), mapSizePx + 20, mapSizePx - 400);
+				largeFont.draw(batch, "Retreat", mapSizePx + 64, mapSizePx - 385);
+				break;
+				
+			case REGROUP:
+				batch.draw(game.assets.get("movement_regroup.png", Texture.class), mapSizePx + 20, mapSizePx - 400);
+				largeFont.draw(batch, "Regroup", mapSizePx + 64, mapSizePx - 385);
+				break;
+		}
+		
+		smallFont.draw(batch, "Strategy", mapSizePx + 64, mapSizePx - 425);
+		switch (game.player.strategy) {
+			case CHARGE:
+				batch.draw(game.assets.get("strategy_charge.png", Texture.class), mapSizePx + 20, mapSizePx - 450);
+				largeFont.draw(batch, "Charge", mapSizePx + 64, mapSizePx - 435);
+				break;
+				
+			case DEFEND:
+				batch.draw(game.assets.get("strategy_defend.png", Texture.class), mapSizePx + 20, mapSizePx - 450);
+				largeFont.draw(batch, "Defend", mapSizePx + 64, mapSizePx - 435);
+				break;
+				
+			case AVOID:
+				batch.draw(game.assets.get("strategy_avoid.png", Texture.class), mapSizePx + 20, mapSizePx - 450);
+				largeFont.draw(batch, "Avoid", mapSizePx + 64, mapSizePx - 435);
+				break;
+				
+			case PROVOKE:
+				batch.draw(game.assets.get("strategy_provoke.png", Texture.class), mapSizePx + 20, mapSizePx - 450);
+				largeFont.draw(batch, "Provoke", mapSizePx + 64, mapSizePx - 435);
+				break;
+		}
+		
+		smallFont.draw(batch, "Recruitment", mapSizePx + 64, mapSizePx - 475);
+		switch (game.player.training) {
+			case SWORDS:
+				batch.draw(game.assets.get("training_swords.png", Texture.class), mapSizePx + 20, mapSizePx - 500);
+				largeFont.draw(batch, "Swordsmen", mapSizePx + 64, mapSizePx - 485);
+				break;
+				
+			case BOWS:
+				batch.draw(game.assets.get("training_bows.png", Texture.class), mapSizePx + 20, mapSizePx - 500);
+				largeFont.draw(batch, "Bowmen", mapSizePx + 64, mapSizePx - 485);
+				break;
+				
+			case CANNONS:
+				batch.draw(game.assets.get("training_cannons.png", Texture.class), mapSizePx + 20, mapSizePx - 500);
+				largeFont.draw(batch, "Cannons", mapSizePx + 64, mapSizePx - 485);
+				break;
+				
+			case MILITIA:
+				batch.draw(game.assets.get("training_militia.png", Texture.class), mapSizePx + 20, mapSizePx - 500);
+				largeFont.draw(batch, "Militia", mapSizePx + 64, mapSizePx - 485);
+				break;
 		}
 		
 		batch.end();

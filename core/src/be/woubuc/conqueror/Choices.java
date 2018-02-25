@@ -30,7 +30,7 @@ import java.util.function.Consumer;
  */
 public class Choices {
 	
-	private Game game;
+	private final Game game;
 	
 	/**
 	 * Initialises the choices manager

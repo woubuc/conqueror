@@ -2,10 +2,7 @@ package be.woubuc.conqueror;
 
 import be.woubuc.conqueror.map.Tile;
 import be.woubuc.conqueror.map.TileMap;
-import be.woubuc.conqueror.screens.ChoiceScreen;
-import be.woubuc.conqueror.screens.GameScreen;
-import be.woubuc.conqueror.screens.LoadingScreen;
-import be.woubuc.conqueror.screens.VictoryScreen;
+import be.woubuc.conqueror.screens.*;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
@@ -36,22 +33,26 @@ public final class Game extends com.badlogic.gdx.Game {
 		return new TextureRegionDrawable(new TextureRegion(get().assets.get(id, Texture.class)));
 	}
 	
-	public final List<Faction> factions = new ArrayList<>();;
+	public final List<Faction> factions = new ArrayList<>();
 	public Faction player;
 	
-	public TileMap map = new TileMap(MAP_SIZE);
+	public final TileMap map = new TileMap(MAP_SIZE);
 	
 	public AssetManager assets;
 	public SpriteBatch batch;
 	public Stage stage;
 	
-	public Screen loadingScreen = new LoadingScreen();
+	private final Screen loadingScreen = new LoadingScreen();
 	public Screen gameScreen = new GameScreen();
 	public ChoiceScreen choiceScreen = new ChoiceScreen();
-	public Screen victoryScreen = new VictoryScreen();
+	
+	public final Screen victoryScreen = new VictoryScreen();
+	public final Screen defeatScreen = new DefeatScreen();
 	
 	@Override
 	public void create () {
+		System.out.println("Initialising game");
+		
 		game = this;
 		
 		// Preload the loading screen font, since we need it right away
@@ -79,6 +80,7 @@ public final class Game extends com.badlogic.gdx.Game {
 		assets.load("training_militia.png", Texture.class);
 		assets.load("training_swords.png", Texture.class);
 		
+		// Prepare rendering
 		batch = new SpriteBatch();
 		stage = new Stage(new ScreenViewport());
 		Gdx.input.setInputProcessor(stage);

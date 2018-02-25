@@ -28,10 +28,9 @@ public class Clock {
 	/**
 	 * Updates the clock timer
 	 * @param deltaTime Time elapsed since the last call to this method
-	 * @return True if a turn occured
+	 * @return True if a turn occurred
 	 */
 	public boolean tick(float deltaTime) {
-		System.out.println(System.currentTimeMillis() + " Tick");
 		time += deltaTime;
 		if (time > TIME_PER_STEP) {
 			time -= TIME_PER_STEP;
@@ -43,7 +42,7 @@ public class Clock {
 	
 	/**
 	 * Updates the step and runs the turn if necessary
-	 * @return True if a turn occured
+	 * @return True if a turn occurred
 	 */
 	private boolean step() {
 		if (steps >= STEPS_PER_TURN) {
