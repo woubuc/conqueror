@@ -55,6 +55,6 @@ public final class Globals {
 	public static final int TILE_SIZE = 36;
 	
 	// Clock settings
-	public static final float TIME_PER_STEP = 0.6f;
-	public static final int STEPS_PER_TURN = 16;
+	public static final float TIME_PER_STEP = 0.45f;
+	public static final int STEPS_PER_TURN = 15;
 }

@@ -118,10 +118,6 @@ public final class Game extends com.badlogic.gdx.Game {
 	
 	@Override
 	public void dispose () {
-		loadingScreen.dispose();
-		gameScreen.dispose();
-		choiceScreen.dispose();
-		
 		batch.dispose();
 		assets.dispose();
 	}
