@@ -55,12 +55,12 @@ public final class GameScreen implements Screen {
 			for (Tile tile : row) {
 				if (tile.getOwner() == null) continue;
 				
-				batch.draw(ColourUtils.getTexture(tile.getColour(0.2f)), tile.x * TILE_SIZE, tile.y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
+				batch.draw(ColourUtils.getTexture(tile.getColour(0.15f)), tile.x * TILE_SIZE, tile.y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
 				
 				if (tile.wasAttacked()) batch.draw(game.assets.get("icon_fight.png", Texture.class), tile.x * TILE_SIZE, tile.y * TILE_SIZE);
 				
 				if (tile.isFrontline()) {
-					TextureRegion colour = ColourUtils.getTexture(tile.getColour(0.5f));
+					TextureRegion colour = ColourUtils.getTexture(tile.getColour(0.4f));
 					
 					Tile left = tile.getRelative(-1, 0);
 					if (left != null && left.getOwner() != tile.getOwner()) batch.draw(colour, tile.x * TILE_SIZE, tile.y * TILE_SIZE, 1, TILE_SIZE);
@@ -75,7 +75,7 @@ public final class GameScreen implements Screen {
 					if (bottom != null && bottom.getOwner() != tile.getOwner()) batch.draw(colour, tile.x * TILE_SIZE, tile.y * TILE_SIZE, TILE_SIZE, 1);
 				}
 				
-				smallFont.draw(batch, tile.getAttacked() + "," + tile.getDefense() + "\n" + tile.getUnits(), tile.x * TILE_SIZE + 2, tile.y * TILE_SIZE + 18);
+				//smallFont.draw(batch, tile.getAttacked() + "," + tile.getDefense() + "\n" + tile.getUnits(), tile.x * TILE_SIZE + 2, tile.y * TILE_SIZE + 18);
 			}
 		}
 		

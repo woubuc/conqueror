@@ -83,8 +83,7 @@ public final class Game extends com.badlogic.gdx.Game {
 		stage = new Stage(new ScreenViewport());
 		Gdx.input.setInputProcessor(stage);
 		
-		assets.finishLoading();
-		setScreen(victoryScreen);
+		setScreen(loadingScreen);
 		
 		initialiseFactions();
 	}
