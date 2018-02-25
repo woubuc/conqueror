@@ -11,5 +11,7 @@ In Conqueror, you don't control your army directly. Instead, every turn you'll h
 
 In between turns, the armies will expand their territory and attack each other, according to the given orders.
 
+The number of units on a tile determines how strongly coloured the tile is, and each tile can only hold a limited number of units. But each unit type has different strength values, so depending on your recruitment orders there can still be differences between two evenly-coloured tiles. Check the 'attack' and 'defense' stats on the right side of the screen to see the actual strength of your opponents (across all their tiles).
+
 ## State of the game
 Unfortunately due to the limited time of the game jam, I didn't get around to implementing all of the orders, and the movement / attacking is a bit more barebones than I would've liked. But the basic concept is there.
