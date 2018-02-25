@@ -28,11 +28,14 @@ public class Choices {
 		this.game = game;
 	}
 	
-	void createMovementChoice(Movement currentMovement) {
+	/**
+	 * Creates the movement choice window
+	 */
+	void createMovementChoice() {
 		System.out.println("Creating movement choices");
 		List<Option<Movement>> options = new ArrayList<>();
 		
-		if (currentMovement != Movement.EXPLORE) {
+		if (game.player.movement != Movement.EXPLORE) {
 			options.add(new Option<>("Explore",
 					Game.getDrawable("movement_explore.png"),
 					Movement.EXPLORE,
@@ -40,7 +43,7 @@ public class Choices {
 			));
 		}
 		
-		if (currentMovement != Movement.FORTIFY) {
+		if (game.player.movement != Movement.FORTIFY) {
 			options.add(new Option<>("Fortify",
 					Game.getDrawable("movement_fortify.png"),
 					Movement.FORTIFY,
@@ -48,49 +51,52 @@ public class Choices {
 			));
 		}
 		
-		if (currentMovement != Movement.PROVOKE) {
-			options.add(new Option<>("Provoke",
-					Game.getDrawable("movement_provoke.png"),
-					Movement.PROVOKE,
-					"Try to provoke the enemy to attack areas with more fighters, giving less defended areas a chance to recover."
-			));
-		}
-		
-		if (currentMovement != Movement.RETREAT) {
+		if (game.player.movement != Movement.RETREAT) {
 			options.add(new Option<>("Retreat",
 					Game.getDrawable("movement_retreat.png"),
 					Movement.RETREAT,
-					"Abandon our frontline and retreat until a new, stronger line of defense has been established."
+					"Abandon our frontline and retreat until a new, stronger line of defense has been established. (not implemented yet)"
+			));
+		}
+		
+		if (game.player.movement != Movement.REGROUP) {
+			options.add(new Option<>("Regroup",
+					Game.getDrawable("movement_regroup.png"),
+					Movement.REGROUP,
+					"Attempt to bring your army together in strong groups, instead of spreading out. (not implemented yet)"
 			));
 		}
 		
 		createChoice("Give movement orders", options, (choice) -> {
-			game.player.setMovement(choice.value);
+			game.player.movement = choice.value;
 			game.isTurn = false;
 		});
 	}
 	
-	void createStrategyChoice(Strategy currentStrategy) {
+	/**
+	 * Creates the strategy choice window
+	 */
+	void createStrategyChoice() {
 		System.out.println("Creating strategy choices");
 		List<Option<Strategy>> options = new ArrayList<>();
 		
-		if (currentStrategy != Strategy.AVOID) {
+		if (game.player.strategy != Strategy.AVOID) {
 			options.add(new Option<>("Avoid",
 					Game.getDrawable("strategy_avoid.png"),
 					Strategy.AVOID,
-					"Avoid conflict with the enemy. Will attempt to leave some space between our frontlines and the enemy"
+					"Avoid conflict with the enemy. Will attempt to leave some space between our frontlines and the enemy. (not implemented yet)"
 			));
 		}
 		
-		if (currentStrategy != Strategy.CHARGE) {
+		if (game.player.strategy != Strategy.CHARGE) {
 			options.add(new Option<>("Charge",
 					Game.getDrawable("strategy_charge.png"),
 					Strategy.CHARGE,
-					"Charge head-first into battle. May tip the balance in our favour if the enemy didn't expect us."
+					"Charge head-first into battle and try to overwhelm the enemy with surprise attacks, ambushes and sheer power."
 			));
 		}
 		
-		if (currentStrategy != Strategy.DEFEND) {
+		if (game.player.strategy != Strategy.DEFEND) {
 			options.add(new Option<>("Defend",
 					Game.getDrawable("strategy_defend.png"),
 					Strategy.DEFEND,
@@ -98,25 +104,28 @@ public class Choices {
 			));
 		}
 		
-		if (currentStrategy != Strategy.REGROUP) {
-			options.add(new Option<>("Regroup",
-					Game.getDrawable("strategy_regroup.png"),
-					Strategy.REGROUP,
-					"Attempt to bring your army together in strong groups, instead of spreading out."
+		if (game.player.strategy != Strategy.PROVOKE) {
+			options.add(new Option<>("Provoke",
+					Game.getDrawable("strategy_provoke.png"),
+					Strategy.PROVOKE,
+					"Try to provoke the enemy to attack areas with more fighters, giving less defended areas a chance to recover. (not implemented yet)"
 			));
 		}
 		
 		createChoice("Choose battleground strategy", options, (choice) -> {
-			game.player.setStrategy(choice.value);
+			game.player.strategy = choice.value;
 			game.isTurn = false;
 		});
 	}
 	
-	void createTrainingChoice(Training currentTraining) {
+	/**
+	 * Creates the training choice window
+	 */
+	void createTrainingChoice() {
 		System.out.println("Creating training choices");
 		List<Option<Training>> options = new ArrayList<>();
 		
-		if (currentTraining != Training.SWORDS) {
+		if (game.player.training != Training.SWORDS) {
 			options.add(new Option<>("Swordsmen",
 					Game.getDrawable("training_swords.png"),
 					Training.SWORDS,
@@ -124,7 +133,7 @@ public class Choices {
 			));
 		}
 		
-		if (currentTraining != Training.BOWS) {
+		if (game.player.training != Training.BOWS) {
 			options.add(new Option<>("Bowmen",
 					Game.getDrawable("training_bows.png"),
 					Training.BOWS,
@@ -132,7 +141,7 @@ public class Choices {
 			));
 		}
 		
-		if (currentTraining != Training.CANNONS) {
+		if (game.player.training != Training.CANNONS) {
 			options.add(new Option<>("Cannonneer",
 					Game.getDrawable("training_cannons.png"),
 					Training.CANNONS,
@@ -140,7 +149,7 @@ public class Choices {
 			));
 		}
 		
-		if (currentTraining != Training.MILITIA) {
+		if (game.player.training != Training.MILITIA) {
 			options.add(new Option<>("Militia",
 					Game.getDrawable("training_militia.png"),
 					Training.MILITIA,
@@ -149,11 +158,17 @@ public class Choices {
 		}
 		
 		createChoice("Select recruitment policy", options, (choice) -> {
-			game.player.setTraining(choice.value);
+			game.player.training = choice.value;
 			game.isTurn = false;
 		});
 	}
 	
+	/**
+	 * Creates the actual dialog window, used by the other methods in this class.
+	 * @param title The dialog title
+	 * @param options The options
+	 * @param onChosen Called when an option is chosen
+	 */
 	private <T> void createChoice(String title, List<Option<T>> options, Consumer<Option<T>> onChosen) {
 		Table root = new Table();
 		root.setFillParent(true);
@@ -210,6 +225,9 @@ public class Choices {
 		root.add(container);
 	}
 	
+	/**
+	 * Data container that holds information about the possible options
+	 */
 	private class Option<T> {
 		final Drawable drawable;
 		final T value;

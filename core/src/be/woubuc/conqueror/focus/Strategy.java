@@ -4,5 +4,5 @@ public enum Strategy {
 	CHARGE,
 	DEFEND,
 	AVOID,
-	REGROUP
+	PROVOKE
 }
