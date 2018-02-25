@@ -41,6 +41,11 @@ public final class GameScreen implements Screen {
 	public void render(float delta) {
 		if (clock.tick(Gdx.graphics.getDeltaTime())) return;
 		
+		if (game.player.getScore() == MAP_SIZE * MAP_SIZE) {
+			game.setScreen(game.victoryScreen);
+			return;
+		}
+		
 		Gdx.gl.glClearColor(COLOUR_BACKGROUND.r, COLOUR_BACKGROUND.g, COLOUR_BACKGROUND.b, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		batch.begin();

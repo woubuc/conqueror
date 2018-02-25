@@ -184,7 +184,6 @@ public class Choices {
 	private <T> void createChoice(String title, List<Option<T>> options, Consumer<Option<T>> onChosen) {
 		Table root = new Table();
 		root.setFillParent(true);
-		root.setBackground(new TextureRegionDrawable(ColourUtils.getTexture(Globals.COLOUR_PANEL)));
 		game.stage.addActor(root);
 		
 		Label.LabelStyle labelStyle = new Label.LabelStyle(game.assets.get("font-large.fnt"), Color.WHITE);

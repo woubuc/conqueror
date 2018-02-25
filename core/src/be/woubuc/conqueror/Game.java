@@ -5,7 +5,9 @@ import be.woubuc.conqueror.map.TileMap;
 import be.woubuc.conqueror.screens.ChoiceScreen;
 import be.woubuc.conqueror.screens.GameScreen;
 import be.woubuc.conqueror.screens.LoadingScreen;
+import be.woubuc.conqueror.screens.VictoryScreen;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -35,7 +37,7 @@ public final class Game extends com.badlogic.gdx.Game {
 	}
 	
 	public final List<Faction> factions = new ArrayList<>();;
-	Faction player;
+	public Faction player;
 	
 	public TileMap map = new TileMap(MAP_SIZE);
 	
@@ -43,9 +45,10 @@ public final class Game extends com.badlogic.gdx.Game {
 	public SpriteBatch batch;
 	public Stage stage;
 	
-	public LoadingScreen loadingScreen = new LoadingScreen();
-	public GameScreen gameScreen = new GameScreen();
+	public Screen loadingScreen = new LoadingScreen();
+	public Screen gameScreen = new GameScreen();
 	public ChoiceScreen choiceScreen = new ChoiceScreen();
+	public Screen victoryScreen = new VictoryScreen();
 	
 	@Override
 	public void create () {
@@ -80,7 +83,8 @@ public final class Game extends com.badlogic.gdx.Game {
 		stage = new Stage(new ScreenViewport());
 		Gdx.input.setInputProcessor(stage);
 		
-		setScreen(loadingScreen);
+		assets.finishLoading();
+		setScreen(victoryScreen);
 		
 		initialiseFactions();
 	}

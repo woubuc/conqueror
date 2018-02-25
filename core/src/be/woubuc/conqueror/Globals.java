@@ -19,17 +19,17 @@ public final class Globals {
 	public static final Color COLOUR_PANEL_ACTIVE = ColourUtils.getColour(50, 64, 86);
 	
 	// Game & Balance settings
-	public static final float UNIT_ATK_SWORDS = 2.8f;
+	public static final float UNIT_ATK_SWORDS = 3.2f;
 	public static final float UNIT_DEF_SWORDS = 2.2f;
 	
-	public static final float UNIT_ATK_BOWS = 3.8f;
-	public static final float UNIT_DEF_BOWS = 1.6f;
+	public static final float UNIT_ATK_BOWS = 4.6f;
+	public static final float UNIT_DEF_BOWS = 2f;
 	
 	public static final float UNIT_ATK_CANNONS = 7.2f;
 	public static final float UNIT_DEF_CANNONS = 9.5f;
 	
-	public static final float UNIT_ATK_MILITIA = 0.9f;
-	public static final float UNIT_DEF_MILITIA = 1.2f;
+	public static final float UNIT_ATK_MILITIA = 1f;
+	public static final float UNIT_DEF_MILITIA = 1.4f;
 	
 	public static final int MAX_UNITS = 20;
 	
@@ -43,8 +43,8 @@ public final class Globals {
 	public static final float UNIT_INCREASE_PER_TURN = 0.1f;
 	
 	public static final float UNIT_INCREASE_BOWS_MULTIPLIER = 0.9f;
-	public static final float UNIT_INCREASE_CANNONS_MULTIPLIER = 0.36f;
-	public static final float UNIT_INCREASE_MILITIA_MULTIPLIER = 2.4f;
+	public static final float UNIT_INCREASE_CANNONS_MULTIPLIER = 0.35f;
+	public static final float UNIT_INCREASE_MILITIA_MULTIPLIER = 2.6f;
 	
 	// Map settings
 	public static final int MAP_SIZE = 20;
