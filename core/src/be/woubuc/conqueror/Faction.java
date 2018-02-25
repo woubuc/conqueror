@@ -4,7 +4,6 @@ import be.woubuc.conqueror.focus.Movement;
 import be.woubuc.conqueror.focus.Strategy;
 import be.woubuc.conqueror.focus.Training;
 import be.woubuc.conqueror.map.Tile;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 
 import java.util.*;
@@ -44,12 +43,6 @@ public class Faction {
 		ownedTiles.remove(tile);
 		frontlineTiles.remove(tile);
 		tile.getSurrounding().forEach(this::updateFrontline);
-		
-		if (isEliminated() && playerControlled) {
-			// Game over!
-			// TODO make game over screen
-			Gdx.app.exit();
-		}
 	}
 	
 	/**

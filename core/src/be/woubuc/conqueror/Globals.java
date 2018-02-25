@@ -42,12 +42,16 @@ public final class Globals {
 	public static final float UNIT_INCREASE_MAX = 36;
 	public static final float UNIT_INCREASE_PER_TURN = 0.1f;
 	
-	public static final float UNIT_INCREASE_BOWS_MULTIPLIER = 0.9f;
-	public static final float UNIT_INCREASE_CANNONS_MULTIPLIER = 0.35f;
-	public static final float UNIT_INCREASE_MILITIA_MULTIPLIER = 2.6f;
+	public static final float UNIT_INCREASE_BOWS_MULTIPLIER = 0.76f;
+	public static final float UNIT_INCREASE_CANNONS_MULTIPLIER = 0.32f;
+	public static final float UNIT_INCREASE_MILITIA_MULTIPLIER = 2.2f;
+	
+	public static final float DEFEND_MULTIPLIER = 1.25f;
+	public static final float FORTIFY_MULTIPLIER = 1.1f;
+	public static final float CHARGE_MULTIPLIER = 1.4f;
 	
 	// Map settings
-	public static final int MAP_SIZE = 20;
+	public static final int MAP_SIZE = 16;
 	public static final int TILE_SIZE = 36;
 	
 	// Clock settings

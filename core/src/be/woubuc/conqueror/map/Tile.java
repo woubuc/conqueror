@@ -239,6 +239,10 @@ public class Tile {
 		if (atk < 2) atk = 2;
 		if (def < 2) def = 2;
 		
+		if (target.owner.movement == Movement.FORTIFY) def *= FORTIFY_MULTIPLIER;
+		if (target.owner.strategy == Strategy.DEFEND) def *= FORTIFY_MULTIPLIER;
+		if (owner.strategy == Strategy.CHARGE) atk *= CHARGE_MULTIPLIER;
+		
 		// Remove units from both sides based on atk and def values
 		// Attacker loses based on def roll, defender loses based on atk roll
 		while (true) {

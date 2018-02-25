@@ -43,7 +43,8 @@ public final class DefeatScreen implements Screen {
 		batch.begin();
 		
 		font.draw(batch, "You were defeated", 0, (Gdx.graphics.getHeight() / 2) + 20, Gdx.graphics.getWidth(), Align.center, false);
-		smallFont.draw(batch, "Your kingdom mourns you.. Or at least, it would if it wasn't completely destroyed in these foolish wars.", 100, Gdx.graphics.getHeight() / 2, Gdx.graphics.getWidth() - 200, Align.center, false);
+		smallFont.draw(batch, "Your kingdom mourns you. Or at least, it would if it wasn't completely destroyed in these foolish wars.",
+				100, Gdx.graphics.getHeight() / 2, Gdx.graphics.getWidth() - 200, Align.center, false);
 		
 		font.draw(batch, "Press any key to exit", 0, 50, Gdx.graphics.getWidth(), Align.center, false);
 		

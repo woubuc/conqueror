@@ -43,7 +43,8 @@ public final class VictoryScreen implements Screen {
 		batch.begin();
 		
 		font.draw(batch, "Victory", 0, (Gdx.graphics.getHeight() / 2) + 20, Gdx.graphics.getWidth(), Align.center, false);
-		smallFont.draw(batch, "You live to rule over these lands another day. These heroic exploits will surely be remembered.", 100, Gdx.graphics.getHeight() / 2, Gdx.graphics.getWidth() - 200, Align.center, false);
+		smallFont.draw(batch, "You live to rule over these lands another day. These heroic exploits will surely be remembered. By everyone you didn't just murder, that is.",
+				100, Gdx.graphics.getHeight() / 2, Gdx.graphics.getWidth() - 200, Align.center, false);
 		
 		font.draw(batch, "Press any key to exit", 0, 50, Gdx.graphics.getWidth(), Align.center, false);
 		
