@@ -48,7 +48,7 @@ public class Tile {
 	 * @return The tile, or null if no tile was found
 	 */
 	public Tile getRelative(int x, int y) {
-		return Game.map.getTile(this.x + x, this.y + y);
+		return Game.get().map.getTile(this.x + x, this.y + y);
 	}
 	
 	/**

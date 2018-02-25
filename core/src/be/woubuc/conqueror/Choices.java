@@ -3,6 +3,7 @@ package be.woubuc.conqueror;
 import be.woubuc.conqueror.focus.Movement;
 import be.woubuc.conqueror.focus.Strategy;
 import be.woubuc.conqueror.focus.Training;
+import be.woubuc.conqueror.screens.ChoiceScreen;
 import be.woubuc.conqueror.util.ColourUtils;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -20,11 +21,22 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
+/**
+ * Creates the choices UI, used in {@link ChoiceScreen}.
+ *
+ * Every choice category has 4 options, but only 3 are shown at a time. Players
+ * cannot choose the same value they chose on the previous choice window of
+ * the same category.
+ */
 public class Choices {
 	
 	private Game game;
 	
-	Choices(Game game) {
+	/**
+	 * Initialises the choices manager
+	 * @param game The main game instance
+	 */
+	public Choices(Game game) {
 		this.game = game;
 	}
 	
@@ -39,7 +51,7 @@ public class Choices {
 			options.add(new Option<>("Explore",
 					Game.getDrawable("movement_explore.png"),
 					Movement.EXPLORE,
-					"Send out explorers to chart the unknown areas, so our army can march on more efficiently."
+					"Send out explorers to chart the unknown areas, so the army can march on more efficiently."
 			));
 		}
 		
@@ -55,7 +67,7 @@ public class Choices {
 			options.add(new Option<>("Retreat",
 					Game.getDrawable("movement_retreat.png"),
 					Movement.RETREAT,
-					"Abandon our frontline and retreat until a new, stronger line of defense has been established. (not implemented yet)"
+					"Abandon the frontline and retreat until a new, stronger line of defense has been established. (not implemented yet)"
 			));
 		}
 		
@@ -63,13 +75,13 @@ public class Choices {
 			options.add(new Option<>("Regroup",
 					Game.getDrawable("movement_regroup.png"),
 					Movement.REGROUP,
-					"Attempt to bring your army together in strong groups, instead of spreading out. (not implemented yet)"
+					"Attempt to bring the army together in strong groups, instead of spreading out. (not implemented yet)"
 			));
 		}
 		
 		createChoice("Give movement orders", options, (choice) -> {
 			game.player.movement = choice.value;
-			game.isTurn = false;
+			game.setScreen(game.gameScreen);
 		});
 	}
 	
@@ -92,7 +104,7 @@ public class Choices {
 			options.add(new Option<>("Charge",
 					Game.getDrawable("strategy_charge.png"),
 					Strategy.CHARGE,
-					"Charge head-first into battle and try to overwhelm the enemy with surprise attacks, ambushes and sheer power."
+					"Charge head-first into battle and try to overwhelm the enemy with surprise attacks and sheer power."
 			));
 		}
 		
@@ -100,7 +112,7 @@ public class Choices {
 			options.add(new Option<>("Defend",
 					Game.getDrawable("strategy_defend.png"),
 					Strategy.DEFEND,
-					"Stand ground and try to defend our current territory, instead of expanding our reach."
+					"Stand ground and try to defend the current territory, instead of expanding."
 			));
 		}
 		
@@ -114,7 +126,7 @@ public class Choices {
 		
 		createChoice("Choose battleground strategy", options, (choice) -> {
 			game.player.strategy = choice.value;
-			game.isTurn = false;
+			game.setScreen(game.gameScreen);
 		});
 	}
 	
@@ -126,15 +138,15 @@ public class Choices {
 		List<Option<Training>> options = new ArrayList<>();
 		
 		if (game.player.training != Training.SWORDS) {
-			options.add(new Option<>("Swordsmen",
+			options.add(new Option<>("Swordsman",
 					Game.getDrawable("training_swords.png"),
 					Training.SWORDS,
-					"Your standard military units. Efficient at slaying enemies, but not invulnerable."
+					"Standard military units. Efficient at slaying enemies, but far from invulnerable."
 			));
 		}
 		
 		if (game.player.training != Training.BOWS) {
-			options.add(new Option<>("Bowmen",
+			options.add(new Option<>("Bowman",
 					Game.getDrawable("training_bows.png"),
 					Training.BOWS,
 					"Bowmen are very weak when defending, but in offense they can make it rain hell upon the enemy."
@@ -142,10 +154,10 @@ public class Choices {
 		}
 		
 		if (game.player.training != Training.CANNONS) {
-			options.add(new Option<>("Cannonneer",
+			options.add(new Option<>("Cannon",
 					Game.getDrawable("training_cannons.png"),
 					Training.CANNONS,
-					"Training is very slow, but on the battlefield these are nearly invincible."
+					"Training is very slow, but these cannons are nearly invincible on the battlefield."
 			));
 		}
 		
@@ -153,13 +165,13 @@ public class Choices {
 			options.add(new Option<>("Militia",
 					Game.getDrawable("training_militia.png"),
 					Training.MILITIA,
-					"Recruit anyone you can find, as fast as possible. Your army will quickly become low in skill but high in numbers."
+					"Recruit anyone, as fast as possible. The army will quickly become low in skill but high in numbers."
 			));
 		}
 		
 		createChoice("Select recruitment policy", options, (choice) -> {
 			game.player.training = choice.value;
-			game.isTurn = false;
+			game.setScreen(game.gameScreen);
 		});
 	}
 	
@@ -173,10 +185,10 @@ public class Choices {
 		Table root = new Table();
 		root.setFillParent(true);
 		root.setBackground(new TextureRegionDrawable(ColourUtils.getTexture(Globals.COLOUR_PANEL)));
-		game.getStage().addActor(root);
+		game.stage.addActor(root);
 		
-		Label.LabelStyle labelStyle = new Label.LabelStyle(game.getLargeFont(), Color.WHITE);
-		Label.LabelStyle smallLabelStyle = new Label.LabelStyle(game.getSmallFont(), Color.WHITE);
+		Label.LabelStyle labelStyle = new Label.LabelStyle(game.assets.get("font-large.fnt"), Color.WHITE);
+		Label.LabelStyle smallLabelStyle = new Label.LabelStyle(game.assets.get("font-small.fnt"), Color.WHITE);
 		
 		Table container = new Table();
 		
@@ -204,7 +216,9 @@ public class Choices {
 			optionButton.addListener(new InputListener() {
 				@Override
 				public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-					game.getStage().clear();
+					container.getChildren().forEach(Actor::clearListeners);
+					container.remove();
+					game.stage.clear();
 					onChosen.accept(option);
 					return true;
 				}

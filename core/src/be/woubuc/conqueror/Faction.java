@@ -60,7 +60,7 @@ public class Faction {
 	/**
 	 * @return The score of this faction
 	 */
-	int getScore() {
+	public int getScore() {
 		return ownedTiles.size();
 	}
 	
