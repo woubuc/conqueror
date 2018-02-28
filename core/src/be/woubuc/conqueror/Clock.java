@@ -1,5 +1,7 @@
 package be.woubuc.conqueror;
 
+import be.woubuc.conqueror.factions.Faction;
+
 import java.util.List;
 
 import static be.woubuc.conqueror.Globals.STEPS_PER_TURN;

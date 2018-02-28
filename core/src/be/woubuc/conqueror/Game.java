@@ -1,5 +1,6 @@
 package be.woubuc.conqueror;
 
+import be.woubuc.conqueror.factions.Faction;
 import be.woubuc.conqueror.map.Tile;
 import be.woubuc.conqueror.map.TileMap;
 import be.woubuc.conqueror.screens.*;
@@ -27,6 +28,7 @@ public final class Game extends com.badlogic.gdx.Game {
 	private static Game game;
 	public static Game get() { return game; }
 	
+	// Random number generator
 	public static final Random random = new Random();
 	
 	static Drawable getDrawable(String id) {
@@ -94,19 +96,19 @@ public final class Game extends com.badlogic.gdx.Game {
 		player = new Faction("Player", COLOUR_PLAYER, true);
 		Tile playerStart = map.getTile(random.nextInt(MAP_SIZE), random.nextInt(MAP_SIZE));
 		playerStart.claim(player);
-		playerStart.swords = MAX_UNITS;
+		playerStart.swords = UNIT_SIZE_MAX;
 		factions.add(player);
 		
 		Faction enemyOne = new Faction("Enemy One", COLOUR_ENEMY_ONE, false);
 		Tile enemyOneStart = map.getTile(random.nextInt(MAP_SIZE), random.nextInt(MAP_SIZE));
 		enemyOneStart.claim(enemyOne);
-		enemyOneStart.swords = MAX_UNITS;
+		enemyOneStart.swords = UNIT_SIZE_MAX;
 		factions.add(enemyOne);
 		
 		Faction enemyTwo = new Faction("Enemy Two", COLOUR_ENEMY_TWO, false);
 		Tile enemyTwoStart = map.getTile(random.nextInt(MAP_SIZE), random.nextInt(MAP_SIZE));
 		enemyTwoStart.claim(enemyTwo);
-		enemyTwoStart.swords = MAX_UNITS;
+		enemyTwoStart.swords = UNIT_SIZE_MAX;
 		factions.add(enemyTwo);
 	}
 	

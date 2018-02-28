@@ -31,9 +31,9 @@ public final class Globals {
 	public static final float UNIT_ATK_MILITIA = 1f;
 	public static final float UNIT_DEF_MILITIA = 1.4f;
 	
-	public static final int MAX_UNITS = 20;
+	public static final int UNIT_SIZE_MAX = 20;
+	public static final int UNIT_SIZE_MIN = 2;
 	
-	public static final int MIN_UNITS = 2;
 	public static final int MIN_UNITS_FRONTLINE = 8;
 	public static final float MIN_UNITS_DEFEND_MULTIPLIER = 1.25f;
 	public static final float MIN_UNITS_FORTIFY_MULTIPLIER = 1.6f;

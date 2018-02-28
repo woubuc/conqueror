@@ -1,12 +1,15 @@
 package be.woubuc.conqueror.map;
 
-import be.woubuc.conqueror.Faction;
 import be.woubuc.conqueror.Game;
+import be.woubuc.conqueror.factions.Faction;
+import be.woubuc.conqueror.factions.Unit;
 import be.woubuc.conqueror.focus.Movement;
 import be.woubuc.conqueror.focus.Strategy;
 import be.woubuc.conqueror.util.ColourUtils;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.ai.pfa.Connection;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.utils.Array;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,20 +28,76 @@ public class Tile {
 	public int cannons = 0;
 	public int militia = 0;
 	
+	private final TileMap map;
 	public final int x;
 	public final int y;
 	
 	private float attacked = 0;
 	private float unitsEase = 0;
 	
+	private Unit unit;
+	
+	private Tile[] neighbours;
+	private TileConnection[] connections;
+	private final Array<Connection> connectionArray = new Array<>(4);
+	
 	/**
-	 * Initialises the tile
+	 * Creates the tile
 	 * @param x The X coordinate on the map
 	 * @param y The Y coordinate on the map
 	 */
-	Tile(int x, int y) {
+	Tile(TileMap map, int x, int y) {
+		this.map = map;
 		this.x = x;
 		this.y = y;
+	}
+	
+	public TileMap getMap() {
+		return map;
+	}
+	
+	/**
+	 * Have a unit enter this tile
+	 * @param unit The unit
+	 */
+	public boolean enter(Unit unit) {
+		if (this.unit != null) return false;
+		this.unit = unit;
+		return true;
+	}
+	
+	/**
+	 * Remove the current unit from this tile
+	 */
+	public void exit() {
+		unit = null;
+	}
+	
+	/**
+	 * Initialises the tile. Should be called after all tiles are created.
+	 */
+	void init() {
+		// Find neighbours
+		Tile above = map.getTile(x, y + 1);
+		Tile right = map.getTile(x + 1, y);
+		Tile below = map.getTile(x, y - 1);
+		Tile left = map.getTile(x - 1, y);
+		
+		List<Tile> tiles = new ArrayList<>(4);
+		if (above != null) tiles.add(above);
+		if (right != null) tiles.add(right);
+		if (below != null) tiles.add(below);
+		if (left != null) tiles.add(left);
+		
+		neighbours = new Tile[tiles.size()];
+		connections = new TileConnection[tiles.size()];
+		
+		for (int i = 0; i < tiles.size(); i++) {
+			neighbours[i] = tiles.get(i);
+			connections[i] = new TileConnection(this, tiles.get(i));
+		}
+		
+		tiles.clear();
 	}
 	
 	/**
@@ -54,16 +113,8 @@ public class Tile {
 	/**
 	 * @return The 4 tiles directly adjacent to this tile
 	 */
-	public List<Tile> getSurrounding() {
-		List<Tile> tiles = new ArrayList<>();
-		for (int x = -1; x <= 1; x++) {
-			for (int y = -1; y <= 1; y++) {
-				if (x == y || x == -y) continue;
-				Tile t = getRelative(x, y);
-				if (t != null) tiles.add(t);
-			}
-		}
-		return tiles;
+	public Tile[] getSurrounding() {
+		return neighbours;
 	}
 	
 	/**
@@ -78,8 +129,20 @@ public class Tile {
 			if (Math.abs(unitsEase - units) < 0.05f) unitsEase = units;
 		}
 		
-		float colourAlpha = offset + (unitsEase / (float) MAX_UNITS) * (1f - offset);
+		float colourAlpha = offset + (unitsEase / (float) UNIT_SIZE_MAX) * (1f - offset);
 		return ColourUtils.alpha(getOwner().colour, colourAlpha);
+	}
+	
+	/**
+	 * Gets the connections for the pathfinder
+	 * @return An array containing the connecting tiles
+	 */
+	public Array<Connection> getConnections() {
+		connectionArray.clear();
+		for (TileConnection connection : connections) {
+			if (connection.isValid()) connectionArray.add(connection);
+		}
+		return connectionArray;
 	}
 	
 	/**
@@ -174,7 +237,7 @@ public class Tile {
 			}
 			
 			units--;
-			if (target.getUnits() >= MAX_UNITS) break;
+			if (target.getUnits() >= UNIT_SIZE_MAX) break;
 		}
 	}
 	
@@ -182,9 +245,9 @@ public class Tile {
 	 * @return The minimum unit count that should be on this tile
 	 */
 	public int getMinimumUnits() {
-		if (owner == null) return MIN_UNITS;
+		if (owner == null) return UNIT_SIZE_MIN;
 		
-		int min = MIN_UNITS;
+		int min = UNIT_SIZE_MIN;
 		if (isFrontline() && owner.movement != Movement.EXPLORE) min = MIN_UNITS_FRONTLINE;
 		
 		if (isFrontline() && owner.movement == Movement.FORTIFY) min *= MIN_UNITS_FORTIFY_MULTIPLIER;
@@ -292,5 +355,23 @@ public class Tile {
 			int move = getUnits() - 1;
 			moveUnits(move, target);
 		}
+	}
+	
+	private class TileConnection implements Connection {
+		
+		private final Tile from;
+		private final Tile to;
+		
+		TileConnection(Tile from, Tile to) {
+			this.from = from;
+			this.to = to;
+		}
+		
+		/** @return True if both tiles are owned by the same faction */
+		boolean isValid() { return from.getOwner() == to.getOwner(); }
+		
+		@Override public float getCost() { return 1; }
+		@Override public Object getFromNode() { return from; }
+		@Override public Object getToNode() { return to; }
 	}
 }

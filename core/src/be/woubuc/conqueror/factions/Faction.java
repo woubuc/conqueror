@@ -1,5 +1,6 @@
-package be.woubuc.conqueror;
+package be.woubuc.conqueror.factions;
 
+import be.woubuc.conqueror.Game;
 import be.woubuc.conqueror.focus.Movement;
 import be.woubuc.conqueror.focus.Strategy;
 import be.woubuc.conqueror.focus.Training;
@@ -12,6 +13,8 @@ import static be.woubuc.conqueror.Globals.*;
 
 public class Faction {
 	
+	private Set<Unit> units = new HashSet<>();
+	
 	public final String name;
 	public final Color colour;
 	private final boolean playerControlled;
@@ -23,9 +26,11 @@ public class Faction {
 	private final Set<Tile> ownedTiles = new HashSet<>();
 	private final Set<Tile> frontlineTiles = new HashSet<>();
 	
+	private final List<Tile> neighbourList = new ArrayList<>(5);
+	
 	private float unitsToAdd = 0;
 	
-	Faction(String name, Color colour, boolean playerControlled) {
+	public Faction(String name, Color colour, boolean playerControlled) {
 		this.name = name;
 		this.colour = colour;
 		this.playerControlled = playerControlled;
@@ -36,13 +41,19 @@ public class Faction {
 	public void addTile(Tile tile) {
 		ownedTiles.add(tile);
 		updateFrontline(tile);
-		tile.getSurrounding().forEach(this::updateFrontline);
+		
+		for (Tile t : tile.getSurrounding()) {
+			updateFrontline(t);
+		}
 	}
 	
 	public void removeTile(Tile tile) {
 		ownedTiles.remove(tile);
 		frontlineTiles.remove(tile);
-		tile.getSurrounding().forEach(this::updateFrontline);
+		
+		for (Tile t : tile.getSurrounding()) {
+			updateFrontline(t);
+		}
 	}
 	
 	/**
@@ -104,14 +115,14 @@ public class Faction {
 	 * @return True if all tiles of this faction are almost full
 	 */
 	private boolean isNearUnitLimit() {
-		return getUnits() >= ownedTiles.size() * (MAX_UNITS - 1);
+		return getUnits() >= ownedTiles.size() * (UNIT_SIZE_MAX - 1);
 	}
 	
 	/**
 	 * Goes through all frontline tiles and pulls units from non-frontline tiles
 	 * until the frontline is filled up or there are no more units left to pull.
 	 */
-	void pullToFrontline() {
+	public void pullToFrontline() {
 		if (isEliminated()) return;
 		
 		/* First we need to build up a set of tiles, to prevent concurrent modification
@@ -119,7 +130,7 @@ public class Faction {
 		 */
 		Set<Tile> tiles = new HashSet<>();
 		for (Tile tile : frontlineTiles) {
-			if (tile.getUnits() >= MAX_UNITS) continue; // Don't pull to full tiles
+			if (tile.getUnits() >= UNIT_SIZE_MAX) continue; // Don't pull to full tiles
 			tiles.add(tile);
 		}
 		
@@ -142,7 +153,7 @@ public class Faction {
 					int unitsToMove = adjacentTile.getUnits() - adjacentTile.getMinimumUnits();
 					if (unitsToMove < 1) continue;
 					
-					if (tile.getUnits() + unitsToMove > MAX_UNITS) unitsToMove = MAX_UNITS - tile.getUnits();
+					if (tile.getUnits() + unitsToMove > UNIT_SIZE_MAX) unitsToMove = UNIT_SIZE_MAX - tile.getUnits();
 					
 					adjacentTile.moveUnits(unitsToMove, tile);
 				}
@@ -156,7 +167,7 @@ public class Faction {
 	 * defended everywhere and excess units will eventually find their way to
 	 * the frontline.
 	 */
-	void equaliseUnits() {
+	public void equaliseUnits() {
 		if (isEliminated()) return;
 		
 		Set<Tile> innerTiles = new HashSet<>();
@@ -166,9 +177,11 @@ public class Faction {
 		}
 		
 		for (Tile tile : innerTiles) {
-			List<Tile> tiles = tile.getSurrounding();
-			tiles.removeIf(Tile::isFrontline);
-			tiles.add(tile);
+			neighbourList.clear();
+			neighbourList.add(tile);
+			for (Tile t : tile.getSurrounding()) {
+				if (!t.isFrontline()) neighbourList.add(t);
+			}
 			
 			// Find the tile with the most and least force and move force between them
 			// Rinse and repeat until it's approximately equalised
@@ -177,12 +190,12 @@ public class Faction {
 				maxTries--;
 				
 				int max = 0;
-				int min = MAX_UNITS;
+				int min = UNIT_SIZE_MAX;
 				
 				Tile maxTile = null;
 				Tile minTile = null;
 				
-				for (Tile t : tiles) {
+				for (Tile t : neighbourList) {
 					int units = t.getUnits();
 					
 					if (units > max) {
@@ -208,7 +221,7 @@ public class Faction {
 	/**
 	 * Increases the number of units in random inner territory tiles.
 	 */
-	void recruitUnits() {
+	public void recruitUnits() {
 		if (isEliminated()) return;
 		
 		// Number of units to add this step
@@ -240,7 +253,7 @@ public class Faction {
 			if (tries++ > maxTries) break;
 			
 			Tile tile = ownedTilesList.get(Game.random.nextInt(ownedTilesList.size()));
-			if (tile.getUnits() >= MAX_UNITS) continue;
+			if (tile.getUnits() >= UNIT_SIZE_MAX) continue;
 			
 			switch(training) {
 				case SWORDS: tile.swords++; break;
@@ -256,7 +269,7 @@ public class Faction {
 	/**
 	 * Attempts to conquer adjacent enemy tiles.
 	 */
-	void attackEnemies() {
+	public void attackEnemies() {
 		if (isEliminated()) return;
 		
 		// Don't attack if the choices dictates not to attack
@@ -275,7 +288,7 @@ public class Faction {
 				if (target.getOwner() == this) continue;
 				
 				if (target.getDefense() <= tile.getAttacked()) attackTargets.add(target);
-				else if (tile.getUnits() >= MAX_UNITS - MIN_UNITS) attackTargets.add(target);
+				else if (tile.getUnits() >= UNIT_SIZE_MAX - UNIT_SIZE_MIN) attackTargets.add(target);
 				else if (Game.random.nextInt(5) < (strategy == Strategy.CHARGE ? 3 : 1)) attackTargets.add(target);
 			}
 			
@@ -300,7 +313,7 @@ public class Faction {
 	 * Fifth action of a game step. Expands territory into unclaimed
 	 * tiles, but only from frontline tiles that don't border enemy tiles.
 	 */
-	void expandTerritory() {
+	public void expandTerritory() {
 		if (isEliminated()) return;
 		
 		if (strategy == Strategy.DEFEND && !isNearUnitLimit() && movement != Movement.EXPLORE) return;
@@ -349,7 +362,10 @@ public class Faction {
 	 */
 	private void updateFrontline(Tile tile) {
 		updateFrontlineTile(tile);
-		tile.getSurrounding().forEach(this::updateFrontlineTile);
+		
+		for (Tile t : tile.getSurrounding()) {
+			updateFrontlineTile(t);
+		}
 	}
 	
 	private void updateFrontlineTile(Tile tile) {
@@ -371,7 +387,7 @@ public class Faction {
 	/**
 	 * Makes AI enemies randomly change one of their choices on every turn.
 	 */
-	void turn() {
+	public void turn() {
 		if (isEliminated()) return;
 		
 		if (!playerControlled) {

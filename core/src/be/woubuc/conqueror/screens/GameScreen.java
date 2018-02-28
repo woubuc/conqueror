@@ -1,7 +1,7 @@
 package be.woubuc.conqueror.screens;
 
 import be.woubuc.conqueror.Clock;
-import be.woubuc.conqueror.Faction;
+import be.woubuc.conqueror.factions.Faction;
 import be.woubuc.conqueror.Game;
 import be.woubuc.conqueror.map.Tile;
 import be.woubuc.conqueror.util.ColourUtils;
@@ -80,32 +80,30 @@ public final class GameScreen implements Screen {
 		batch.begin();
 		
 		// Draw the map tiles
-		for (Tile[] row : game.map.tiles) {
-			for (Tile tile : row) {
-				if (tile.getOwner() == null) continue;
+		for (Tile tile : game.map.tiles) {
+			if (tile.getOwner() == null) continue;
+			
+			batch.draw(ColourUtils.getTexture(tile.getColour(0.15f)), tile.x * TILE_SIZE, tile.y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
+			
+			if (tile.wasAttacked()) batch.draw(game.assets.get("icon_fight.png", Texture.class), tile.x * TILE_SIZE, tile.y * TILE_SIZE);
+			
+			if (tile.isFrontline()) {
+				TextureRegion colour = ColourUtils.getTexture(tile.getColour(0.4f));
 				
-				batch.draw(ColourUtils.getTexture(tile.getColour(0.15f)), tile.x * TILE_SIZE, tile.y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
+				Tile left = tile.getRelative(-1, 0);
+				if (left != null && left.getOwner() != tile.getOwner()) batch.draw(colour, tile.x * TILE_SIZE, tile.y * TILE_SIZE, 1, TILE_SIZE);
 				
-				if (tile.wasAttacked()) batch.draw(game.assets.get("icon_fight.png", Texture.class), tile.x * TILE_SIZE, tile.y * TILE_SIZE);
+				Tile right = tile.getRelative(1, 0);
+				if (right != null && right.getOwner() != tile.getOwner()) batch.draw(colour, (tile.x + 1) * TILE_SIZE - 1, tile.y * TILE_SIZE, 1, TILE_SIZE);
 				
-				if (tile.isFrontline()) {
-					TextureRegion colour = ColourUtils.getTexture(tile.getColour(0.4f));
-					
-					Tile left = tile.getRelative(-1, 0);
-					if (left != null && left.getOwner() != tile.getOwner()) batch.draw(colour, tile.x * TILE_SIZE, tile.y * TILE_SIZE, 1, TILE_SIZE);
-					
-					Tile right = tile.getRelative(1, 0);
-					if (right != null && right.getOwner() != tile.getOwner()) batch.draw(colour, (tile.x + 1) * TILE_SIZE - 1, tile.y * TILE_SIZE, 1, TILE_SIZE);
-					
-					Tile top = tile.getRelative(0, 1);
-					if (top != null && top.getOwner() != tile.getOwner()) batch.draw(colour, tile.x * TILE_SIZE, (tile.y + 1) * TILE_SIZE - 1, TILE_SIZE, 1);
-					
-					Tile bottom = tile.getRelative(0, -1);
-					if (bottom != null && bottom.getOwner() != tile.getOwner()) batch.draw(colour, tile.x * TILE_SIZE, tile.y * TILE_SIZE, TILE_SIZE, 1);
-				}
+				Tile top = tile.getRelative(0, 1);
+				if (top != null && top.getOwner() != tile.getOwner()) batch.draw(colour, tile.x * TILE_SIZE, (tile.y + 1) * TILE_SIZE - 1, TILE_SIZE, 1);
 				
-				//smallFont.draw(batch, tile.getAttacked() + "," + tile.getDefense() + "\n" + tile.getUnits(), tile.x * TILE_SIZE + 2, tile.y * TILE_SIZE + 18);
+				Tile bottom = tile.getRelative(0, -1);
+				if (bottom != null && bottom.getOwner() != tile.getOwner()) batch.draw(colour, tile.x * TILE_SIZE, tile.y * TILE_SIZE, TILE_SIZE, 1);
 			}
+			
+			//smallFont.draw(batch, tile.getAttacked() + "," + tile.getDefense() + "\n" + tile.getUnits(), tile.x * TILE_SIZE + 2, tile.y * TILE_SIZE + 18);
 		}
 		
 		// Draw the info
